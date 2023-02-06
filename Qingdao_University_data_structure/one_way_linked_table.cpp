@@ -73,7 +73,7 @@ private:
 void List::create_List()
 {
     head = new Node(0);
-    head.next = NULL;
+    head->next = NULL;
 }
 
 // 从头插入一个结点
