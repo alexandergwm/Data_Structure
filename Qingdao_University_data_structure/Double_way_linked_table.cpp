@@ -42,6 +42,8 @@ public:
     void insert_append(int data);
     // 删除指定元素
     void erase(int index);
+    // 两个线性表的合并
+    List_D merge_list(List_D &L);
     
 private:
     // 结点结构
@@ -337,13 +339,41 @@ void List_D::erase(int index)
         p->next->prior = p->prior;
     }
 }
-    
 
-
-
-
-int main()
+List_D List_D::merge_list(List_D &L)
 {
+
+    Node *pa = this->head->next;
+    Node *pb = L.head->next;
+    List_D La,Lb,Lc;
+    La = *this;
+    Lb = L;
+    Lc = La;
+    Node *pc = Lc.head;
+    while((pa)&&(pb))
+    {
+        if(pa->data <= pb->data)  // 尾插法，插入元素
+        {
+            // pc 的指针域指向小元素地址
+            pc->next = pa;
+            pc = pc->next;
+            pa = pa->next;
+        }
+        else
+        {
+            pc->next = pb;
+            pc = pc->next;
+            pb = pb->next;
+        }
+    }
+    pc->next = (pa?pa:pb);
+    delete Lb.head;
+    return Lc;
+}
+    
+void test01()
+{
+    // 测试合并前代码
     List_D L;
     int len;
     cout << "Please define the length of List: " <<endl;
@@ -362,5 +392,35 @@ int main()
     cout << "Insert 5 from head" << endl;
     L.insert_front(5);
     L.print_List_head();
+}
+
+void test02()
+{
+    //测试线性表的合并
+    List_D L1;
+    cout << "please input the length of list1" << endl;
+    int len1;
+    cin >> len1;
+    L1.create_List(len1);
+    List_D L2;
+    cout << "please input the length of list2" << endl;
+    int len2;
+    cin >> len2;
+    L2.create_List(len2);
+    cout << "Now the two lists are shown as" << endl;
+    L1.print_List_head();
+    L2.print_List_head();
+    // 现在两个链表已经创建好
+    // 合并链表
+    List_D L3 = L1.merge_list(L2);
+    L3.print_List_head();
+}
+
+
+
+int main()
+{
+    test02();
+    
     return 0;
 }
