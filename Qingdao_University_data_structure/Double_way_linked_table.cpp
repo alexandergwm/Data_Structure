@@ -2,6 +2,8 @@
 // 查找某结点前驱结点的复杂度为O(n)
 // 故提出双向链表，在单链表的每个结点里再增加一个指向其直接前驱的指针域prior,链表中有两个方向的链
 #include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
 
 class List_D
@@ -44,6 +46,8 @@ public:
     void erase(int index);
     // 两个线性表的合并
     List_D merge_list(List_D &L);
+    // 将线性表中的元素改变为升序排列
+    List_D ascending();
     
 private:
     // 结点结构
@@ -340,6 +344,7 @@ void List_D::erase(int index)
     }
 }
 
+// 有序表的合并，需要两个表都是一个升序排列
 List_D List_D::merge_list(List_D &L)
 {
 
@@ -348,8 +353,8 @@ List_D List_D::merge_list(List_D &L)
     List_D La,Lb,Lc;
     La = *this;
     Lb = L;
-    Lc = La;
-    Node *pc = Lc.head;
+    Lc.Intial_List(); // 新建c为一个空表
+    Node *pc = Lc.head;  // 新建一个结点为c此时的头结点 
     while((pa)&&(pb))
     {
         if(pa->data <= pb->data)  // 尾插法，插入元素
@@ -359,7 +364,7 @@ List_D List_D::merge_list(List_D &L)
             pc = pc->next;
             pa = pa->next;
         }
-        else
+        else if(pa->data >= pb->data)
         {
             pc->next = pb;
             pc = pc->next;
@@ -369,6 +374,38 @@ List_D List_D::merge_list(List_D &L)
     pc->next = (pa?pa:pb);
     delete Lb.head;
     return Lc;
+}
+
+List_D List_D::ascending()
+{
+   // 重新构建链表
+   int a[getsize()];
+   List_D L;
+   L.Intial_List();
+   vector<int> vec;
+   Node * cur = this->head->next;
+   while(cur)
+   {
+        vec.push_back(cur->data);
+        cur = cur->next;
+   }
+   sort(vec.begin(),vec.end());
+   cout << "after sorting"<<endl;
+//    for(vector<int>::iterator it = vec.begin();it!=vec.end();it++)
+//     {
+        
+//         cout << *it <<" ";
+//     }
+   L.head->next = L.tail;
+   L.tail->data = vec[0];
+   for (int i =1;i<=vec.size();i++)
+   {
+       L.tail->next = new Node;
+       L.tail->next->data = vec[i];
+       L.tail = L.tail->next;
+   }
+   L.tail->next = nullptr;
+   return L;
 }
     
 void test01()
@@ -416,11 +453,23 @@ void test02()
     L3.print_List_head();
 }
 
+void test03()
+// 测试是否能够升序排列链表
+{
+    List_D L;
+    int len3;
+    cout <<"please input the length of list"<<endl;
+    cin >> len3;
+    L.create_List(len3);
+    L.print_List_head();
+    L = L.ascending();
+    L.print_List_head();
+}
+
 
 
 int main()
 {
-    test02();
-    
+    test03();
     return 0;
 }
