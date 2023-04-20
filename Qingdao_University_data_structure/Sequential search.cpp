@@ -18,7 +18,7 @@ struct SSTable
 
 int SqSearch(SSTable &S, const KeyType e)
 {
-    // 添加关键字
+    // 添加关键字,在表头设置哨兵
     S.R[0].key = e;
     // 顺序比较查找
     int i;
@@ -27,7 +27,7 @@ int SqSearch(SSTable &S, const KeyType e)
         ;
     }
     return i;
-    // 时间复杂度O(n),空间复杂度O(1),ASL = (n+1)/2
+    // 时间复杂度O(n),空间复杂度O(1)(要为哨兵增加一个辅助空间O(1)),ASL = (n+1)/2
 }
 
 
